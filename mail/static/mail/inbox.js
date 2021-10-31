@@ -32,6 +32,61 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  // Load inbox
+
+  console.log(mailbox);
+
+  if (mailbox == 'inbox') {
+    fetch('/emails/inbox')
+      .then(response => response.json())
+      .then(emails => {
+        // Print emails
+        console.log(emails);
+
+        // ... do something else with emails ...
+        console.log('E-mail length is:' + emails.length)
+
+        if (emails.length <= 10) {
+          for (var i = 0; i < emails.length; i++) {
+
+          }
+        }
+        else {
+          container = document.querySelector("#emails-view");
+
+          mailboxContainer = document.createElement('div');
+          mailboxContainer.className = 'mailboxContainer'
+
+          table = document.createElement('table');
+          table.id = 'table';
+
+          container.appendChild(mailboxContainer);
+          mailboxContainer.appendChild(table);
+
+          for (var i = 0; i < 10; i++) {
+            console.log(emails[i].subject);
+            let row = table.insertRow(i);
+
+            let sender = row.insertCell(0);
+            sender.id = 'sender';
+            let subject = row.insertCell(1);
+            subject.id = 'subject';
+            let timestamp = row.insertCell(2);
+            timestamp.id = 'timestamp';
+
+            sender.innerHTML = emails[i].sender;
+            subject.innerHTML = emails[i].subject;
+            timestamp.innerHTML = emails[i].timestamp;
+
+          }
+        }
+      });
+  }
+}
+
+function populate_container(emails) {
+
 }
 
 function send_mail() {

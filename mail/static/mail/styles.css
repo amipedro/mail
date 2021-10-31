@@ -9,3 +9,9 @@ textarea {
 #sendButton {
     margin: 10px 0px;
 }
+
+
+/** Mailbox area **/
+#table {
+    width: 100%;
+}
