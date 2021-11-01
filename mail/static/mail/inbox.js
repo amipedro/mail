@@ -37,56 +37,90 @@ function load_mailbox(mailbox) {
 
   console.log(mailbox);
 
-  if (mailbox == 'inbox') {
-    fetch('/emails/inbox')
-      .then(response => response.json())
-      .then(emails => {
-        // Print emails
-        console.log(emails);
+  fetch(`/emails/${mailbox}`)
+    .then(response => response.json())
+    .then(emails => {
+      // Print emails
+      console.log(emails);
 
-        // ... do something else with emails ...
-        console.log('E-mail length is:' + emails.length)
+      // ... do something else with emails ...
+      console.log('E-mail length is:' + emails.length)
 
-        if (emails.length <= 10) {
-          for (var i = 0; i < emails.length; i++) {
-
-          }
-        }
-        else {
-          container = document.querySelector("#emails-view");
-
-          mailboxContainer = document.createElement('div');
-          mailboxContainer.className = 'mailboxContainer'
-
-          table = document.createElement('table');
-          table.id = 'table';
-
-          container.appendChild(mailboxContainer);
-          mailboxContainer.appendChild(table);
-
-          for (var i = 0; i < 10; i++) {
-            console.log(emails[i].subject);
-            let row = table.insertRow(i);
-
-            let sender = row.insertCell(0);
-            sender.id = 'sender';
-            let subject = row.insertCell(1);
-            subject.id = 'subject';
-            let timestamp = row.insertCell(2);
-            timestamp.id = 'timestamp';
-
-            sender.innerHTML = emails[i].sender;
-            subject.innerHTML = emails[i].subject;
-            timestamp.innerHTML = emails[i].timestamp;
-
-          }
-        }
-      });
-  }
+      populateMailbox(emails);
+    });
 }
 
-function populate_container(emails) {
 
+function populateMailbox(emails) {
+  if (emails.length <= 10) {
+
+    // Create table
+    container = document.querySelector("#emails-view");
+    table = document.createElement('table');
+    table.id = 'table';
+    container.appendChild(table);
+
+    for (var i = 0; i < emails.length; i++) {
+      console.log(emails[i].subject);
+      // Create row
+      let row = table.insertRow(i);
+
+      // Insert columns inside row and define their id property
+      let sender = row.insertCell(0);
+      sender.id = 'sender';
+      let subject = row.insertCell(1);
+      subject.id = 'subject';
+      let timestamp = row.insertCell(2);
+      timestamp.id = 'timestamp';
+
+      // Color row in case it's read or unread
+      if (emails[i].read == true) {
+        row.style.backgroundColor = 'gainsboro';
+      }
+      else {
+        row.style.backgroundColor = 'white';
+      }
+
+      // Populate columns
+      sender.innerHTML = emails[i].sender;
+      subject.innerHTML = emails[i].subject;
+      timestamp.innerHTML = emails[i].timestamp;
+    }
+  }
+  else {
+    // Create table
+    container = document.querySelector("#emails-view");
+    table = document.createElement('table');
+    table.id = 'table';
+    container.appendChild(table);
+
+    for (var i = 0; i < 10; i++) {
+      console.log(emails[i].subject);
+      // Create row
+      let row = table.insertRow(i);
+
+      // Insert columns inside row and define their id property
+      let sender = row.insertCell(0);
+      sender.id = 'sender';
+      let subject = row.insertCell(1);
+      subject.id = 'subject';
+      let timestamp = row.insertCell(2);
+      timestamp.id = 'timestamp';
+
+      // Color row in case it's read or unread
+      if (emails[i].read == true) {
+        row.style.backgroundColor = 'gainsboro';
+      }
+      else {
+        row.style.backgroundColor = 'white';
+      }
+
+      // Populate columns
+      sender.innerHTML = emails[i].sender;
+      subject.innerHTML = emails[i].subject;
+      timestamp.innerHTML = emails[i].timestamp;
+    }
+  }
 }
 
 function send_mail() {

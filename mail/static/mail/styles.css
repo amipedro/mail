@@ -3,7 +3,6 @@ textarea {
 }
 
 
-
 /** Compose area **/
 
 #sendButton {
@@ -12,6 +11,47 @@ textarea {
 
 
 /** Mailbox area **/
-#table {
+
+.mailboxContainer {
+padding: 0px;
+}
+
+table {
     width: 100%;
+
+    border-collapse: collapse;
+}
+
+tr {
+    border: 1px solid silver;
+    border-right-style: hidden;
+    border-left-style: hidden;
+
+    cursor: pointer;
+}
+
+tr:hover {
+    border: 1px solid gray;
+
+
+    border-right-style: hidden;
+    border-left-style: hidden;
+}
+
+td {
+    padding: 16px;
+}
+
+#sender {
+    font-weight: bold;
+
+    width: 30%;
+    white-space: nowrap;
+}
+
+#timestamp {
+    width: 1%;
+    white-space: nowrap;
+
+    color: gray;
 }
