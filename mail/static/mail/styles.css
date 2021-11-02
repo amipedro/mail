@@ -16,13 +16,13 @@ textarea {
 padding: 0px;
 }
 
-table {
+#table {
     width: 100%;
 
     border-collapse: collapse;
 }
 
-tr {
+#table tr {
     border: 1px solid silver;
     border-right-style: hidden;
     border-left-style: hidden;
@@ -30,7 +30,7 @@ tr {
     cursor: pointer;
 }
 
-tr:hover {
+#table tr:hover {
     border: 1px solid gray;
 
 
@@ -38,7 +38,7 @@ tr:hover {
     border-left-style: hidden;
 }
 
-td {
+#table td {
     padding: 16px;
 }
 
@@ -54,4 +54,20 @@ td {
     white-space: nowrap;
 
     color: gray;
+}
+
+/** Mail view **/
+
+#mail-info {
+    width: 100%;
+
+    border-collapse: collapse;
+    border-bottom: 1px solid gainsboro;
+
+    margin-bottom: 10px;
+}
+.info-1 {
+    width: 12%;
+
+    font-weight: bold;
 }

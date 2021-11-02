@@ -33,8 +33,14 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
-  // Load inbox
+  // "Unload" mail-view in case it was load before, so old mails won't be persistent
+  let mail = document.querySelector('#email-view');
+  if (!isEmpty(mail)) {
+    mail.remove();
+  }
 
+
+  // Load inbox
   console.log(mailbox);
 
   fetch(`/emails/${mailbox}`)
@@ -50,10 +56,16 @@ function load_mailbox(mailbox) {
     });
 }
 
+function isEmpty(obj) {
+  for (var x in obj) {
+    return false;
+  }
+  return true;
+}
+
 
 function populateMailbox(emails) {
   if (emails.length <= 10) {
-
     // Create table
     container = document.querySelector("#emails-view");
     table = document.createElement('table');
@@ -72,6 +84,9 @@ function populateMailbox(emails) {
       subject.id = 'subject';
       let timestamp = row.insertCell(2);
       timestamp.id = 'timestamp';
+      let id = row.insertCell(3);
+      id.id = 'mailId';
+      id.hidden = true;
 
       // Color row in case it's read or unread
       if (emails[i].read == true) {
@@ -85,7 +100,16 @@ function populateMailbox(emails) {
       sender.innerHTML = emails[i].sender;
       subject.innerHTML = emails[i].subject;
       timestamp.innerHTML = emails[i].timestamp;
+      id.innerHTML = emails[i].id;
     }
+
+    // Event listener to get mail id
+    table.addEventListener('click', function (event) {
+      let line = event.target.closest('tr');
+      let cell = line.querySelector('#mailId');
+      let mailId = cell.innerHTML;
+      openMail(mailId);
+    });
   }
   else {
     // Create table
@@ -106,6 +130,9 @@ function populateMailbox(emails) {
       subject.id = 'subject';
       let timestamp = row.insertCell(2);
       timestamp.id = 'timestamp';
+      let id = row.insertCell(3);
+      id.id = 'mailId';
+      id.hidden = true;
 
       // Color row in case it's read or unread
       if (emails[i].read == true) {
@@ -119,9 +146,122 @@ function populateMailbox(emails) {
       sender.innerHTML = emails[i].sender;
       subject.innerHTML = emails[i].subject;
       timestamp.innerHTML = emails[i].timestamp;
+      id.innerHTML = emails[i].id;
     }
+
+    // Event listener to get mail id
+    table.addEventListener('click', function (event) {
+      let line = event.target.closest('tr');
+      let cell = line.querySelector('#mailId');
+      let mailId = cell.innerHTML;
+      openMail(mailId);
+    });
   }
 }
+
+// Function to open an email after id is passed in
+function openMail(id) {
+  fetch(`/emails/${id}`)
+    .then(response => response.json())
+    .then(email => {
+      // Print email
+      console.log(email);
+
+      // ... do something else with email ...
+      populateMailView(email);
+      readMail(id);
+    });
+
+}
+
+function populateMailView(email) {
+  // Close emails-view
+  document.querySelector('#emails-view').style.display = 'none';
+
+  // Create table with sender, recipients, subject and timestamp
+  container = document.querySelector(".container");
+  // Div
+  mail = document.createElement('div');
+  mail.id = 'email-view';
+  emailView = container.appendChild(mail);
+
+  // Table
+  table = document.createElement('table');
+  table.id = 'mail-info';
+  emailView.appendChild(table);
+
+  // Text
+  text = document.createElement('div');
+  emailView.appendChild(text);
+
+  // Populate divs
+  let from = table.insertRow(0);
+  let from1 = from.insertCell(0);
+  let from2 = from.insertCell(1);
+  from1.innerHTML = 'From:';
+  from1.className = 'info-1';
+  from2.innerHTML = email.sender;
+
+  let to = table.insertRow(1);
+  let to1 = to.insertCell(0);
+  let to2 = to.insertCell(1);
+  to1.innerHTML = 'To:';
+  to1.className = 'info-1';
+  to2.innerHTML = email.recipients;
+
+  let subject = table.insertRow(2);
+  let sub1 = subject.insertCell(0);
+  let sub2 = subject.insertCell(1);
+  sub1.innerHTML = 'Subject:';
+  sub1.className = 'info-1';
+  sub2.innerHTML = email.subject;
+
+  let timestamp = table.insertRow(3);
+  let time1 = timestamp.insertCell(0);
+  let time2 = timestamp.insertCell(1);
+  time1.innerHTML = 'Timestamp:';
+  time1.className = 'info-1';
+  time2.innerHTML = email.timestamp;
+
+  text.innerHTML = email.body;
+}
+
+function readMail(id) {
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      read: true
+    })
+  })
+}
+
+function unreadMail(id) {
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      read: false
+    })
+  })
+}
+
+function archiveMail(id) {
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: true
+    })
+  })
+}
+
+function unarchiveMail(id) {
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: false
+    })
+  })
+}
+
 
 function send_mail() {
 
