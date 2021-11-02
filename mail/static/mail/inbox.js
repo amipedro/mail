@@ -52,7 +52,7 @@ function load_mailbox(mailbox) {
       // ... do something else with emails ...
       console.log('E-mail length is:' + emails.length)
 
-      populateMailbox(emails);
+      populateMailbox(emails, mailbox);
     });
 }
 
@@ -64,7 +64,7 @@ function isEmpty(obj) {
 }
 
 
-function populateMailbox(emails) {
+function populateMailbox(emails, mailbox) {
   if (emails.length <= 10) {
     // Create table
     container = document.querySelector("#emails-view");
@@ -88,6 +88,15 @@ function populateMailbox(emails) {
       id.id = 'mailId';
       id.hidden = true;
 
+      if (mailbox == 'inbox') {
+        var button1 = row.insertCell(4);
+        var button2 = row.insertCell(5);
+      }
+      else if (mailbox == 'archive') {
+        var button2 = row.insertCell(4);
+      }
+
+
       // Color row in case it's read or unread
       if (emails[i].read == true) {
         row.style.backgroundColor = 'gainsboro';
@@ -101,14 +110,55 @@ function populateMailbox(emails) {
       subject.innerHTML = emails[i].subject;
       timestamp.innerHTML = emails[i].timestamp;
       id.innerHTML = emails[i].id;
+
+      if (mailbox == 'inbox') {
+        // Add read and unread buttons
+        if (emails[i].read == true) {
+          button1.className = 'unread';
+        }
+        else {
+          button1.className = 'read';
+        }
+
+        // Add archive and unarchive buttons
+        if (emails[i].archive == true) {
+          button2.className = 'unarchive';
+        }
+        else {
+          button2.className = 'archive';
+        }
+      }
+      else if (mailbox == 'archive') {
+        button2.className = 'unarchive';
+      }
     }
 
     // Event listener to get mail id
     table.addEventListener('click', function (event) {
+      // Identifies if a button was clicked
+      let button = event.target.closest('td');
+
+      // Identify if a line but not a button was clicked
       let line = event.target.closest('tr');
       let cell = line.querySelector('#mailId');
       let mailId = cell.innerHTML;
-      openMail(mailId);
+
+      // Open an email or make another action depending if a button was clicked
+      if (button.className == 'unread') {
+        unreadMail(mailId);
+      }
+      else if (button.className == 'read') {
+        readMail(mailId);
+      }
+      else if (button.className == 'archive') {
+        archiveMail(mailId);
+      }
+      else if (button.className == 'unarchive') {
+        unarchiveMail(mailId);
+      }
+      else {
+        openMail(mailId);
+      }
     });
   }
   else {
@@ -134,6 +184,15 @@ function populateMailbox(emails) {
       id.id = 'mailId';
       id.hidden = true;
 
+      if (mailbox == 'inbox') {
+        var button1 = row.insertCell(4);
+        var button2 = row.insertCell(5);
+      }
+      else if (mailbox == 'archive') {
+        var button2 = row.insertCell(4);
+      }
+
+
       // Color row in case it's read or unread
       if (emails[i].read == true) {
         row.style.backgroundColor = 'gainsboro';
@@ -147,14 +206,56 @@ function populateMailbox(emails) {
       subject.innerHTML = emails[i].subject;
       timestamp.innerHTML = emails[i].timestamp;
       id.innerHTML = emails[i].id;
+
+      if (mailbox == 'inbox') {
+        // Add read and unread buttons
+        if (emails[i].read == true) {
+          button1.className = 'unread';
+        }
+        else {
+          button1.className = 'read';
+        }
+
+        // Add archive and unarchive buttons
+        if (emails[i].archive == true) {
+          button2.className = 'unarchive';
+        }
+        else {
+          button2.className = 'archive';
+        }
+      }
+      else if (mailbox == 'archive') {
+        button2.className = 'unarchive';
+      }
     }
 
     // Event listener to get mail id
     table.addEventListener('click', function (event) {
+      // Identifies if a button was clicked
+      let button = event.target.closest('td');
+
+      // Identify if a line but not a button was clicked
       let line = event.target.closest('tr');
       let cell = line.querySelector('#mailId');
       let mailId = cell.innerHTML;
-      openMail(mailId);
+
+      // Open an email or make another action depending if a button was clicked
+      if (button.className == 'unread') {
+        unreadMail(mailId);
+      }
+      else if (button.className == 'read') {
+        readMail(mailId);
+        setTimeout(() => load_mailbox('inbox'), 80);
+      }
+      else if (button.className == 'archive') {
+        archiveMail(mailId);
+      }
+      else if (button.className == 'unarchive') {
+        unarchiveMail(mailId);
+      }
+      else {
+        openMail(mailId);
+      }
     });
   }
 }
@@ -232,7 +333,7 @@ function readMail(id) {
     body: JSON.stringify({
       read: true
     })
-  })
+  });
 }
 
 function unreadMail(id) {
@@ -241,7 +342,8 @@ function unreadMail(id) {
     body: JSON.stringify({
       read: false
     })
-  })
+  });
+  setTimeout(() => load_mailbox('inbox'), 80);
 }
 
 function archiveMail(id) {
@@ -250,7 +352,8 @@ function archiveMail(id) {
     body: JSON.stringify({
       archived: true
     })
-  })
+  });
+  load_mailbox('inbox');
 }
 
 function unarchiveMail(id) {
@@ -259,7 +362,8 @@ function unarchiveMail(id) {
     body: JSON.stringify({
       archived: false
     })
-  })
+  });
+  load_mailbox('inbox');
 }
 
 

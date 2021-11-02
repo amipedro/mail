@@ -56,7 +56,7 @@ padding: 0px;
     color: gray;
 }
 
-/** Mail view **/
+/* Mail view */
 
 #mail-info {
     width: 100%;
@@ -70,4 +70,34 @@ padding: 0px;
     width: 12%;
 
     font-weight: bold;
+}
+
+/* Icons */
+
+.read {
+    background-image: url('icons/read.png');
+    background-size: 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.unread {
+    background-image: url('icons/unread.png');
+    background-size: 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.archive {
+    background-image: url('icons/archive.png');
+    background-size: 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.unarchive {
+    background-image: url('icons/unarchive.png');
+    background-size: 32px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
