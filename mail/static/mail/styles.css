@@ -72,6 +72,22 @@ padding: 0px;
     font-weight: bold;
 }
 
+#archiveButton, #unarchiveButton, #replyButton {
+    color: white;
+
+    background-color: #155fe8;
+
+    border-radius: 5px 5px;
+    border: 1px;
+    outline:none;
+
+    margin: 4px;
+}
+
+#replyButton {
+    background-color: rgb(16, 143, 58);
+}
+
 /* Icons */
 
 .read {
