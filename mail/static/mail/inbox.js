@@ -323,5 +323,4 @@ function send_mail() {
     });
 
   load_mailbox('sent');
-  console.log('Sent');
 }
